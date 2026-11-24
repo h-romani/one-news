@@ -1,0 +1,13 @@
+
+{
+    "name": "one-daily-app",
+    "version": "1.0.0",
+    "scripts": {
+      "start": "node server.js"
+    },
+    "dependencies": {
+      "express": "^4.21.2",
+      "rss-parser": "^3.13.0"
+    }
+  }
+  
