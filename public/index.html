@@ -488,27 +488,27 @@ function selectDailyStory(articles) {
 //
 // Never put private API keys in this browser file.
 
-async function generateArticle(selectedStory) {
+// async function generateArticle(selectedStory) {
 
-  const response = await fetch("/api/generate-article", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      headline: selectedStory.title,
-      description: selectedStory.description,
-      originalUrl: selectedStory.link,
-      publishedAt: selectedStory.pubDate
-    })
-  });
+//   const response = await fetch("/api/generate-article", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json"
+//     },
+//     body: JSON.stringify({
+//       headline: selectedStory.title,
+//       description: selectedStory.description,
+//       originalUrl: selectedStory.link,
+//       publishedAt: selectedStory.pubDate
+//     })
+//   });
 
-  if (!response.ok) {
-    throw new Error("Article generation failed.");
-  }
+//   if (!response.ok) {
+//     throw new Error("Article generation failed.");
+//   }
 
-  return await response.json();
-}
+//   return await response.json();
+// }
 
 
 // =====================================================
@@ -705,41 +705,34 @@ $("complete").addEventListener("click", () => {
 // LOAD DAILY ARTICLE
 // =====================================================
 
-async function loadDailyArticle() {
 
+async function loadDailyStory() {
   try {
+    const response = await fetch("/api/daily-story");
 
-    $("headline").textContent =
-      "Finding today's most important story...";
+    if (!response.ok) {
+      throw new Error("Could not load daily story");
+    }
 
-    const feed = await fetchNews();
+    const story = await response.json();
 
-    const articles =
-      feed.articles || feed.items || [];
+    document.getElementById("article-title").textContent =
+      story.title;
 
-    const selectedStory =
-      selectDailyStory(articles);
+    document.getElementById("article-description").textContent =
+      story.description || "";
 
-    const generated =
-      await generateArticle(selectedStory);
+    document.getElementById("article-link").href =
+      story.link;
 
-    renderArticle(generated);
-
-  } catch(error) {
-
-    $("headline").textContent =
-      "Today's story is not available yet.";
-
-    $("deck").textContent = error.message;
-
-    $("article").innerHTML = `
-      <p>
-        Connect your RSS feed and article-generation
-        backend to start receiving your daily edition.
-      </p>
-    `;
+  } catch (error) {
+    console.error(error);
+    alert("Unable to load today's story.");
   }
 }
+
+loadDailyStory();
+
 
 
 // =====================================================
@@ -748,7 +741,6 @@ async function loadDailyArticle() {
 
 updateLock();
 
-loadDailyArticle();
 
 </script>
 
