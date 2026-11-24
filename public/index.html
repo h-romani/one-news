@@ -1,0 +1,756 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ONE — One Story Every Day</title>
+
+<style>
+:root {
+  --bg: #f4f1ea;
+  --paper: #fffdf8;
+  --ink: #1d2522;
+  --muted: #737a73;
+  --line: #dddcd3;
+  --accent: #b64d31;
+  --green: #315b49;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Georgia, serif;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 5%;
+  border-bottom: 1px solid var(--line);
+  font-family: Arial, sans-serif;
+}
+
+.logo {
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: .2em;
+}
+
+.date {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+main {
+  max-width: 820px;
+  margin: 55px auto;
+  padding: 0 24px 80px;
+}
+
+.kicker {
+  font: bold 11px Arial;
+  letter-spacing: .17em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: clamp(42px, 7vw, 76px);
+  line-height: .99;
+  letter-spacing: -.045em;
+  margin: 18px 0;
+}
+
+.deck {
+  font-size: 21px;
+  line-height: 1.5;
+  color: #59615b;
+}
+
+.meta {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  font: 12px Arial;
+  color: var(--muted);
+  margin: 25px 0;
+}
+
+.hero {
+  background: #e7e2d7;
+  padding: 45px 20px;
+  text-align: center;
+  font: 11px Arial;
+  letter-spacing: .12em;
+  color: #536158;
+}
+
+.article {
+  background: var(--paper);
+  padding: clamp(24px, 5vw, 54px);
+  border: 1px solid var(--line);
+  margin-top: 24px;
+}
+
+.article h2 { font-size: 28px; }
+
+.article h3 {
+  font-size: 24px;
+  margin-top: 35px;
+}
+
+.article p {
+  font-size: 19px;
+  line-height: 1.8;
+  color: #303a34;
+}
+
+.article a { color: var(--green); }
+
+.callout {
+  border-left: 3px solid var(--accent);
+  padding: 15px 20px;
+  margin: 28px 0;
+  background: #f7f1e9;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.progress {
+  height: 5px;
+  background: #e5e2d9;
+  margin-top: 30px;
+}
+
+.bar {
+  height: 100%;
+  width: 0;
+  background: var(--green);
+  transition: width .2s;
+}
+
+.small {
+  font: 12px Arial;
+  color: var(--muted);
+  margin-top: 9px;
+}
+
+.quiz {
+  display: none;
+  margin-top: 35px;
+  border-top: 1px solid var(--line);
+  padding-top: 25px;
+}
+
+textarea {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--line);
+  font: 16px Georgia;
+  background: white;
+  resize: vertical;
+}
+
+button {
+  background: var(--ink);
+  color: white;
+  padding: 15px 20px;
+  border: none;
+  cursor: pointer;
+  font: bold 12px Arial;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-top: 14px;
+}
+
+button:disabled {
+  opacity: .4;
+}
+
+.lock {
+  background: #e9eee8;
+  border: 1px solid #cbd8cc;
+  padding: 24px;
+  margin-top: 25px;
+}
+
+.lock h3 { margin-top: 0; }
+
+.status {
+  color: var(--green);
+  font: 13px Arial;
+  margin-top: 12px;
+}
+
+.sources {
+  margin-top: 35px;
+  font: 14px/1.7 Arial;
+}
+
+.sources a { color: var(--green); }
+
+footer {
+  text-align: center;
+  font: 11px/1.7 Arial;
+  color: var(--muted);
+  margin-top: 50px;
+}
+
+@media(max-width:600px) {
+  main { margin: 35px auto; }
+  .article p { font-size: 17px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">ONE<span style="color:#b64d31">.</span></div>
+  <div class="date" id="today"></div>
+</header>
+
+<main>
+
+<div class="kicker">Your daily briefing · One story only</div>
+
+<h1 id="headline">Finding today's story...</h1>
+
+<p class="deck" id="deck">
+One important event. Carefully explained. No endless feed.
+</p>
+
+<div class="meta">
+  <span id="edition">TODAY'S EDITION</span>
+  <span>8–10 MIN READ</span>
+  <span>ONE STORY ONLY</span>
+</div>
+
+<div class="hero" id="hero">
+  ONE · DAILY INTELLIGENCE
+</div>
+
+<section class="article">
+
+<div id="article">
+  <p>Finding today's most important story...</p>
+</div>
+
+<div class="progress">
+  <div class="bar" id="bar"></div>
+</div>
+
+<div class="small">
+  <span id="readpct">0%</span> read · Scroll to the end to unlock completion.
+</div>
+
+<div class="quiz" id="quiz">
+
+<h3>Before you go</h3>
+
+<p>What is the most important takeaway from this article?</p>
+
+<p class="small">
+Write one sentence in your own words.
+</p>
+
+<textarea id="reflection" rows="4"
+placeholder="What did you learn?"></textarea>
+
+<button id="complete">
+Complete today's reading
+</button>
+
+<div class="status" id="feedback"></div>
+
+</div>
+</section>
+
+<div class="lock" id="lock">
+<h3>Tomorrow's story is locked.</h3>
+<p>
+Finish today's reading and reflection.
+Your next edition becomes available tomorrow.
+</p>
+<div class="small" id="lockstate">
+Today's edition is waiting for you.
+</div>
+</div>
+
+<div class="sources" id="sources"></div>
+
+<footer>
+ONE — One story. Every day.<br>
+Original explanatory journalism based on linked source reporting.<br>
+Your reading progress is saved in this browser.
+</footer>
+
+</main>
+
+<script>
+
+// =====================================================
+// ONE — NEWS SOURCE CONFIGURATION
+// =====================================================
+
+// PASTE YOUR PREFERRED RSS FEED URL HERE.
+//
+// Examples:
+// BBC: https://feeds.bbci.co.uk/news/rss.xml
+// Guardian: https://www.theguardian.com/world/rss
+//
+// IMPORTANT:
+// RSS fetching should be handled through a backend
+// or an RSS-to-JSON service to avoid browser CORS issues.
+
+const NEWS_FEED_URL = "https://www.theguardian.com/world/rss";
+
+// Optional RSS-to-JSON endpoint.
+// Replace with your preferred service/backend.
+
+const RSS_API_ENDPOINT = "/api/rss";
+
+// =====================================================
+// END NEWS SOURCE CONFIGURATION
+// =====================================================
+
+
+// =====================================================
+// DAILY SETTINGS
+// =====================================================
+
+const SETTINGS = {
+  maxArticleAgeHours: 48,
+  minimumReadingProgress: 96,
+  articleLimit: 1,
+  storageKey: "ONE_DAILY_PROGRESS"
+};
+
+
+// =====================================================
+// APPLICATION STATE
+// =====================================================
+
+const $ = id => document.getElementById(id);
+
+const now = new Date();
+
+const todayKey = [
+  now.getFullYear(),
+  String(now.getMonth()+1).padStart(2,"0"),
+  String(now.getDate()).padStart(2,"0")
+].join("-");
+
+$("today").textContent =
+  now.toLocaleDateString(undefined,{
+    weekday:"long",
+    month:"long",
+    day:"numeric",
+    year:"numeric"
+  });
+
+let progressReached = false;
+
+let savedState =
+  JSON.parse(localStorage.getItem(SETTINGS.storageKey) || "{}");
+
+let completed =
+  savedState.completedDate === todayKey;
+
+
+// =====================================================
+// RSS FETCHING
+// =====================================================
+
+async function fetchNews() {
+
+  if (!RSS_API_ENDPOINT) {
+    throw new Error(
+      "RSS backend not connected. Configure RSS_API_ENDPOINT."
+    );
+  }
+
+  const response = await fetch(
+    RSS_API_ENDPOINT + "?url=" +
+    encodeURIComponent(NEWS_FEED_URL)
+  );
+
+  if (!response.ok) {
+    throw new Error("Could not retrieve news feed.");
+  }
+
+  return await response.json();
+}
+
+
+// =====================================================
+// STORY IMPORTANCE SCORING
+// =====================================================
+
+function scoreStory(article) {
+
+  const text = (
+    article.title + " " +
+    (article.description || "")
+  ).toLowerCase();
+
+  const importance = {
+    war: 5,
+    attack: 5,
+    invasion: 5,
+    nuclear: 5,
+    earthquake: 5,
+    election: 4,
+    crisis: 4,
+    climate: 3,
+    breakthrough: 4,
+    president: 3,
+    economy: 3,
+    technology: 2,
+    artificial: 2,
+    government: 3,
+    billion: 2,
+    health: 2,
+    international: 2,
+    sanctions: 3,
+    agreement: 2
+  };
+
+  let score = 0;
+
+  for (const keyword in importance) {
+    if (text.includes(keyword)) {
+      score += importance[keyword];
+    }
+  }
+
+  const published = new Date(
+    article.pubDate || article.publishedAt
+  );
+
+  const ageHours =
+    (Date.now() - published.getTime()) / 3600000;
+
+  if (ageHours <= 24) score += 5;
+  else if (ageHours <= 48) score += 2;
+  else score -= 100;
+
+  return score;
+}
+
+
+// =====================================================
+// SELECT THE ONE DAILY STORY
+// =====================================================
+
+function selectDailyStory(articles) {
+
+  const cutoff =
+    Date.now() - SETTINGS.maxArticleAgeHours * 3600000;
+
+  const recent = articles.filter(article => {
+
+    const date = new Date(
+      article.pubDate || article.publishedAt
+    );
+
+    return !isNaN(date) && date.getTime() >= cutoff;
+  });
+
+  if (!recent.length) {
+    throw new Error("No qualifying recent stories found.");
+  }
+
+  recent.sort(
+    (a,b) => scoreStory(b) - scoreStory(a)
+  );
+
+  return recent[0];
+}
+
+
+// =====================================================
+// ARTICLE GENERATION PLACEHOLDER
+// =====================================================
+
+// Connect your preferred AI article-generation backend here.
+//
+// The backend should:
+// 1. Receive the selected RSS story.
+// 2. Verify the event using multiple independent sources.
+// 3. Generate an original 650–900 word article.
+// 4. Return the article, summary, and source links.
+//
+// Never put private API keys in this browser file.
+
+async function generateArticle(selectedStory) {
+
+  const response = await fetch("/api/generate-article", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      headline: selectedStory.title,
+      description: selectedStory.description,
+      originalUrl: selectedStory.link,
+      publishedAt: selectedStory.pubDate
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error("Article generation failed.");
+  }
+
+  return await response.json();
+}
+
+
+// =====================================================
+// RENDER ARTICLE
+// =====================================================
+
+function renderArticle(article) {
+
+  $("headline").textContent = article.headline;
+
+  $("deck").textContent = article.deck;
+
+  $("edition").textContent =
+    "EDITION · " + todayKey;
+
+  let html = "";
+
+  for (const section of article.sections || []) {
+
+    html += `
+      <h3>${escapeHTML(section.heading)}</h3>
+      <p>${escapeHTML(section.text)}</p>
+    `;
+  }
+
+  if (article.whyItMatters) {
+
+    html += `
+      <div class="callout">
+        ${escapeHTML(article.whyItMatters)}
+      </div>
+    `;
+  }
+
+  $("article").innerHTML = html;
+
+  $("sources").innerHTML =
+    "<h3>Original reporting</h3>" +
+    (article.sources || []).map(source => `
+      <p>
+        <a href="${safeURL(source.url)}"
+           target="_blank"
+           rel="noopener">
+          ${escapeHTML(source.publisher)}
+        </a>
+      </p>
+    `).join("");
+
+  updateLock();
+}
+
+
+// =====================================================
+// SAFE DISPLAY HELPERS
+// =====================================================
+
+function escapeHTML(value) {
+
+  return String(value || "").replace(
+    /[&<>"']/g,
+    char => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    })[char]
+  );
+}
+
+function safeURL(value) {
+
+  try {
+
+    const url = new URL(value);
+
+    if (
+      url.protocol === "https:" ||
+      url.protocol === "http:"
+    ) {
+      return escapeHTML(url.href);
+    }
+
+  } catch {}
+
+  return "#";
+}
+
+
+// =====================================================
+// DAILY LOCK
+// =====================================================
+
+function updateLock() {
+
+  if (completed) {
+
+    $("lock").innerHTML = `
+      <h3>Today's reading is complete.</h3>
+      <p>
+        You've completed today's edition.
+        Your next story unlocks tomorrow.
+      </p>
+      <div class="status">
+        ✓ Completed for ${todayKey}
+      </div>
+    `;
+
+    $("complete").disabled = true;
+
+    $("complete").textContent = "Completed";
+  }
+}
+
+
+// =====================================================
+// READING PROGRESS
+// =====================================================
+
+function updateProgress() {
+
+  const article = document.querySelector(".article");
+
+  const rect = article.getBoundingClientRect();
+
+  const percentage = Math.max(
+    0,
+    Math.min(
+      100,
+      Math.round(
+        (
+          window.scrollY +
+          window.innerHeight -
+          (window.scrollY + rect.top)
+        ) / article.scrollHeight * 100
+      )
+    )
+  );
+
+  $("bar").style.width = percentage + "%";
+
+  $("readpct").textContent = percentage + "%";
+
+  if (
+    percentage >= SETTINGS.minimumReadingProgress &&
+    !progressReached
+  ) {
+
+    progressReached = true;
+
+    $("quiz").style.display = "block";
+  }
+}
+
+window.addEventListener("scroll", updateProgress);
+
+
+// =====================================================
+// COMPLETE DAILY READING
+// =====================================================
+
+$("complete").addEventListener("click", () => {
+
+  const reflection = $("reflection").value.trim();
+
+  if (!reflection) {
+
+    $("feedback").textContent =
+      "Write your takeaway before completing.";
+
+    return;
+  }
+
+  savedState = {
+    completedDate: todayKey,
+    reflection: reflection
+  };
+
+  localStorage.setItem(
+    SETTINGS.storageKey,
+    JSON.stringify(savedState)
+  );
+
+  completed = true;
+
+  $("feedback").textContent =
+    "Reading completed. See you tomorrow.";
+
+  updateLock();
+});
+
+
+// =====================================================
+// LOAD DAILY ARTICLE
+// =====================================================
+
+async function loadDailyArticle() {
+
+  try {
+
+    $("headline").textContent =
+      "Finding today's most important story...";
+
+    const feed = await fetchNews();
+
+    const articles =
+      feed.articles || feed.items || [];
+
+    const selectedStory =
+      selectDailyStory(articles);
+
+    const generated =
+      await generateArticle(selectedStory);
+
+    renderArticle(generated);
+
+  } catch(error) {
+
+    $("headline").textContent =
+      "Today's story is not available yet.";
+
+    $("deck").textContent = error.message;
+
+    $("article").innerHTML = `
+      <p>
+        Connect your RSS feed and article-generation
+        backend to start receiving your daily edition.
+      </p>
+    `;
+  }
+}
+
+
+// =====================================================
+// INITIALIZE
+// =====================================================
+
+updateLock();
+
+loadDailyArticle();
+
+</script>
+
+</body>
+</html>
